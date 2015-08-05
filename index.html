@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>rnd</title>
+    <link rel="stylesheet" href="./css/pure.css" />
+    <link rel="stylesheet" href="./css/pure-button.css" />
+    <link rel="stylesheet" href="./css/pure-tables.css" />
+    <link rel="stylesheet" href="./css/pure-forms.css" />
+  </head>
+  <body>
+    <div style="padding: 15px;">
+      <div id="option_adding">
+        <h1>hi</h1>
+        <form class="pure-form" onsubmit="return false;">
+          enter option: <input id="option_input" type="text"  />
+          <button class="pure-button" onclick="addOption();">add</button>
+          <button class="pure-button pure-button-primary" onclick="roll();">roll</button>
+        </form>
+      </div>
+      <div id="option_showing" style="margin-top: 15px;">
+
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var options = [];
+
+      function addOption() {
+        var optElement = document.getElementById('option_input');
+        var opt = optElement.value;
+        if (!opt || opt.length < 1) {
+          alert('no valid option entered');
+          return;
+        }
+
+        if (options.indexOf(opt) >= 0) {
+          alert('value already in list');
+          return;
+        }
+
+        options.push(opt);
+        showOptions();
+
+        optElement.value = '';
+      }
+
+      function roll() {
+        var opt = Math.floor(Math.random() * options.length);
+        alert(options[opt]);
+      }
+
+      function removeOption() {
+        var index = options.indexOf(this.textContent);
+        if (index > -1) {
+          options.splice(index, 1);
+        }
+        showOptions();
+      }
+
+      function showOptions() {
+        var opts = document.getElementById('option_showing');
+        removeChildNodes(opts);
+
+        if (options.length > 0) {
+          var label = document.createElement('span');
+          label.textContent = 'entered options: ';
+          opts.appendChild(label);
+        }
+
+        for (var n = 0; n < options.length; n++) {
+          var opt = options[n];
+          var optDiv = document.createElement('button');
+          optDiv.classList.add('pure-button');
+          optDiv.style.margin = '5px';
+          optDiv.textContent = opt;
+          optDiv.onclick = removeOption;
+          opts.appendChild(optDiv);
+        }
+      }
+
+      function removeChildNodes(parentNode) {
+        var removeUs = [];
+        for (var n = 0; n < parentNode.childNodes.length; n++) {
+          var node = parentNode.childNodes[n];
+          removeUs.push(node);
+        }
+        for (var n = 0; n < removeUs.length; n++) {
+          parentNode.removeChild(removeUs[n]);
+        }
+        removeUs = null;
+      }
+    </script>
+  </body>
+</html>
