@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>rnd</title>
+    <link rel="stylesheet" href="./css/style.css" />
     <link rel="stylesheet" href="./css/pure.css" />
     <link rel="stylesheet" href="./css/pure-button.css" />
     <link rel="stylesheet" href="./css/pure-tables.css" />
@@ -46,7 +47,20 @@
 
       function roll() {
         var opt = Math.floor(Math.random() * options.length);
-        alert(options[opt]);
+        var result = options[opt];
+
+        //TODO: overlay and stuff
+        var overlay = document.createElement("div");
+        overlay.classList.add('overlay');
+        document.body.appendChild(overlay);
+
+        var box = document.createElement("div");
+        box.classList.add('resultBox');
+        overlay.appendChild(box);
+
+        var res = document.createElement("div");
+        res.textContent = result;
+        box.appendChild(res);
       }
 
       function removeOption() {
