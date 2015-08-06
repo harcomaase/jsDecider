@@ -14,17 +14,23 @@
         <h1>hi</h1>
         <form class="pure-form" onsubmit="return false;">
           enter option: <input id="option_input" type="text"  />
-          <button class="pure-button" onclick="addOption();">add</button>
-          <button class="pure-button pure-button-primary" onclick="roll();">roll</button>
+          <button id="add_button" class="pure-button" onclick="addOption();">add</button>
+          <button id="roll_button" class="pure-button pure-button-primary pure-button-disabled">roll</button>
         </form>
       </div>
       <div id="option_showing" style="margin-top: 15px;">
 
       </div>
+      <div id="history_showing" style="padding-top: 15px;" class="pure-form">
+
+      </div>
+    </div>
+    <div id="result_showing">
     </div>
 
     <script type="text/javascript">
       var options = [];
+      loadHistory();
 
       function addOption() {
         var optElement = document.getElementById('option_input');
@@ -52,15 +58,29 @@
         //TODO: overlay and stuff
         var overlay = document.createElement("div");
         overlay.classList.add('overlay');
-        document.body.appendChild(overlay);
+        overlay.onclick = hideResult;
+        document.getElementById('result_showing').appendChild(overlay);
 
         var box = document.createElement("div");
         box.classList.add('resultBox');
+        box.onclick = hideResult;
         overlay.appendChild(box);
 
         var res = document.createElement("div");
         res.textContent = result;
+        res.style.fontSize = '2em';
+        res.onclick = hideResult;
         box.appendChild(res);
+
+        var hint = document.createElement("div");
+        hint.textContent = '(click anywhere to close this dialog)';
+        hint.style.color = 'black';
+        hint.style.fontSize = '0.8em';
+        hint.style.fontWeight = 'normal';
+        hint.style.marginTop = '15px';
+        box.appendChild(hint);
+
+        storeOptions();
       }
 
       function removeOption() {
@@ -81,6 +101,12 @@
           opts.appendChild(label);
         }
 
+        var rollButton = document.getElementById('roll_button');
+        if (options.length === 0 !== rollButton.classList.contains('pure-button-disabled')) {
+          rollButton.classList.toggle('pure-button-disabled');
+          rollButton.onclick = rollButton.classList.contains('pure-button-disabled') ? null : roll;
+        }
+
         for (var n = 0; n < options.length; n++) {
           var opt = options[n];
           var optDiv = document.createElement('button');
@@ -90,6 +116,10 @@
           optDiv.onclick = removeOption;
           opts.appendChild(optDiv);
         }
+      }
+
+      function hideResult() {
+        removeChildNodes(document.getElementById('result_showing'));
       }
 
       function removeChildNodes(parentNode) {
@@ -102,6 +132,65 @@
           parentNode.removeChild(removeUs[n]);
         }
         removeUs = null;
+      }
+
+      function storeOptions() {
+        var opts = options.join(',');
+
+        var currentStoredOptions = localStorage.getItem('history');
+        if (!currentStoredOptions) {
+          currentStoredOptions = '';
+        } else {
+          currentStoredOptions += ";";
+        }
+        currentStoredOptions += opts;
+        localStorage.setItem('history', currentStoredOptions);
+      }
+
+      function loadHistory() {
+        var histDiv = document.getElementById('history_showing');
+        removeChildNodes(histDiv);
+        var history = localStorage.getItem('history');
+        if (!history || history === null) {
+          return;
+        }
+        var entries = history.split(';');
+        if (entries.length === 0) {
+          return;
+        }
+
+        var fieldset = document.createElement('fieldset');
+        histDiv.appendChild(fieldset);
+        var hint = document.createElement('legend');
+        hint.textContent = 'Recent options:';
+        fieldset.appendChild(hint);
+
+        for (var n = 0; n < entries.length; n++) {
+          var entry = entries[n];
+          var e = document.createElement('button');
+          e.textContent = entry.split(',').join(', ');
+          e.classList.add('pure-button');
+          e.style.backgroundColor = 'rgb(66, 184, 221)';
+          e.style.marginRight = '5px';
+          e.onclick = loadOptionsFromHistory;
+          fieldset.appendChild(e);
+        }
+
+        var clearButton = document.createElement('button');
+        clearButton.textContent = 'clear history';
+        clearButton.classList.add('pure-button');
+        clearButton.onclick = clearHistory;
+        fieldset.appendChild(clearButton);
+      }
+
+      function clearHistory() {
+        localStorage.removeItem('history');
+        loadHistory();
+      }
+      
+      function loadOptionsFromHistory() {
+        options = this.textContent.split(',');
+        showOptions();
       }
     </script>
   </body>
