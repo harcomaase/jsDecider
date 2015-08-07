@@ -111,8 +111,14 @@ function storeOptions() {
   } else {
     currentStoredOptions += ";";
   }
+  var alreadyContainedIndex = currentStoredOptions.indexOf(opts);
+  if (alreadyContainedIndex > -1) {
+    currentStoredOptions = currentStoredOptions.substring(0, alreadyContainedIndex) + currentStoredOptions.substring(alreadyContainedIndex + opts.length + 1);
+  }
   currentStoredOptions += opts;
   localStorage.setItem('history', currentStoredOptions);
+
+  loadHistory();
 }
 
 function loadHistory() {
@@ -133,7 +139,7 @@ function loadHistory() {
   hint.textContent = 'Recent options:';
   fieldset.appendChild(hint);
 
-  for (var n = 0; n < entries.length; n++) {
+  for (var n = entries.length - 1; n >= 0; n--) {
     var entry = entries[n];
     var e = document.createElement('button');
     e.textContent = entry.split(',').join(', ');
