@@ -20,3 +20,15 @@
   font-weight: bold;
   background-image: linear-gradient(0deg, lightgrey, white);
 }
+
+.container {
+  padding: 15px;
+}
+
+#option_showing {
+  margin-top: 15px;
+}
+
+#history_showing {
+  padding-top: 15px;
+}
