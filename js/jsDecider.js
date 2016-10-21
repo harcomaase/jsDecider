@@ -1,6 +1,9 @@
 var options = [];
 loadHistory();
 
+/**
+ * Add a new option to the list
+ */
 function addOption() {
   var optElement = document.getElementById('option_input');
   var opt = optElement.value;
@@ -20,6 +23,9 @@ function addOption() {
   optElement.value = '';
 }
 
+/**
+ * Do roll and get decision
+ */
 function roll() {
   var opt = Math.floor(Math.random() * options.length);
   var result = options[opt];
@@ -51,6 +57,9 @@ function roll() {
   storeOptions();
 }
 
+/**
+ * Remove an option from the list
+ */
 function removeOption() {
   var index = options.indexOf(this.textContent);
   if (index > -1) {
@@ -59,6 +68,9 @@ function removeOption() {
   showOptions();
 }
 
+/**
+ * Show options list in UI
+ */
 function showOptions() {
   var opts = document.getElementById('option_showing');
   removeChildNodes(opts);
@@ -86,6 +98,9 @@ function showOptions() {
   }
 }
 
+/**
+ * Hide result ;)
+ */
 function hideResult() {
   removeChildNodes(document.getElementById('result_showing'));
 }
@@ -102,6 +117,9 @@ function removeChildNodes(parentNode) {
   removeUs = null;
 }
 
+/**
+ * Store options list in the local storage
+ */
 function storeOptions() {
   var opts = options.join(',');
 
@@ -121,6 +139,9 @@ function storeOptions() {
   loadHistory();
 }
 
+/**
+ * Load and show history of recent options
+ */
 function loadHistory() {
   var histDiv = document.getElementById('history_showing');
   removeChildNodes(histDiv);
@@ -157,11 +178,17 @@ function loadHistory() {
   fieldset.appendChild(clearButton);
 }
 
+/**
+ * Clear history ;)
+ */
 function clearHistory() {
   localStorage.removeItem('history');
   loadHistory();
 }
 
+/**
+ * Load options from the history
+ */
 function loadOptionsFromHistory() {
   options = this.textContent.split(',');
   showOptions();
