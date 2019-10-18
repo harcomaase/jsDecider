@@ -1,3 +1,9 @@
+/**
+* jsDecider, Javascript random decision maker
+* @version 0.1
+* @author harcomaase :)
+*/
+
 var options = [];
 loadHistory();
 
